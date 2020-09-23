@@ -80,16 +80,24 @@ document.addEventListener('keydown', (event) => {
 
 function appendNumber(number) {
 
-    if (number === '.' && currentOperand.indexOf('.') !== -1) {
+    let decimalLength = 0;
+
+    if (currentOperand.includes('.')) {
+        decimalLength = currentOperand.split('.')[1].length;
+        if (decimalLength > 7) {
+            return currentOperand;
+        }
+    }
+
+    if (number === '.' && currentOperand.includes('.')) {
         return currentOperand;
-    } else if ((currentOperand === '0' && number !== '.') || currentOperand === 0) {
+    } else if (currentOperand === '0' && number !== '.') {
         currentOperand = number
     } else if (currentOperand === '' && number === '.') {
         currentOperand = `0${number}`
     } else {
         currentOperand += number;
     }
-
 }
 
 function chooseOperation(operation) {
@@ -148,7 +156,7 @@ function compute() {
         }
     }
 
-    currentOperand = computation;
+    currentOperand = +computation.toFixed(8).toString();
     currentOperation = '';
     previousOperand = '';
 }
