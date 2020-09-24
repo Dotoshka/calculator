@@ -2,9 +2,11 @@
 
 const numberButtons = document.querySelectorAll('[data-number]');
 const operationButtons = document.querySelectorAll('[data-operation]');
+const inlineOperationButtons = document.querySelectorAll('[data-inline-operation]');
 const deleteButton = document.querySelector('[data-delete]');
 const allClearButton = document.querySelector('[data-all-clear]');
 const equalsButton = document.querySelector('[data-equals]');
+const signButton = document.querySelector('[data-sign]');
 
 let previousOperandTextElement = document.querySelector('[data-previous-operand]');
 let currentOperandTextElement = document.querySelector('[data-current-operand]');
@@ -12,6 +14,8 @@ let currentOperandTextElement = document.querySelector('[data-current-operand]')
 let previousOperand = '';
 let currentOperand = '0';
 let currentOperation = '';
+let Computed = false;
+
 updateDisplay();
 
 /* Event listeners button click */
@@ -19,29 +23,55 @@ updateDisplay();
 numberButtons.forEach(button => {
     button.addEventListener('click', () => {
         appendNumber(button.innerText);
+        Computed = false;
         updateDisplay();
     });
 })
 
 operationButtons.forEach(button => {
     button.addEventListener('click', () => {
-        chooseOperation(button.innerText);
+        if (button.innerText === 'x^y') {
+            chooseOperation('^');
+        } else {
+            chooseOperation(button.innerText);
+        }
+        updateDisplay();
+    });
+})
+
+inlineOperationButtons.forEach(button => {
+    button.addEventListener('click', () => {
+
+        if (button.innerText === 'x!') {
+            computeInline('!');
+        } else {
+            computeInline(button.innerText);
+        }
+
         updateDisplay();
     });
 })
 
 deleteButton.addEventListener('click', button => {
     deleteLast();
+    Computed = false;
     updateDisplay();
 });
 
 allClearButton.addEventListener('click', button => {
     clearAll();
+    Computed = false;
     updateDisplay();
 });
 
 equalsButton.addEventListener('click', button => {
     compute();
+    Computed = true;
+    updateDisplay();
+});
+
+signButton.addEventListener('click', button => {
+    changeSign();
     updateDisplay();
 });
 
@@ -53,6 +83,7 @@ document.addEventListener('keydown', (event) => {
     numberButtons.forEach(button => {
         if (button.innerText === keyName) {
             appendNumber(button.innerText);
+            Computed = false;
             updateDisplay();
         }
     })
@@ -64,16 +95,43 @@ document.addEventListener('keydown', (event) => {
     })
     if (keyName === 'Backspace') {
         deleteLast();
+        Computed = false;
         updateDisplay();
     }
-    if (keyName === 'Enter' || keyName === '=') {
+
+    if (keyName === 'Enter') {
         compute();
+        Computed = true;
         updateDisplay();
     }
+
+    if (keyName === '=') {
+        compute();
+        Computed = true;
+        updateDisplay();
+    }
+
     if (keyName === 'Escape') {
         clearAll();
+        Computed = false;
         updateDisplay();
     }
+
+    if (keyName === '^') {
+        chooseOperation(keyName);
+        updateDisplay();
+    }
+
+    if (keyName === '–') {
+        changeSign();
+        updateDisplay();
+    }
+
+    if (keyName === '%' || keyName === '!') {
+        computeInline(keyName);
+        updateDisplay();
+    }
+
 });
 
 /* Functions  */
@@ -82,40 +140,140 @@ function appendNumber(number) {
 
     let decimalLength = 0;
 
-    if (currentOperand.includes('.')) {
+    if (typeof currentOperand !== 'number' && currentOperand.includes('.')) {
         decimalLength = currentOperand.split('.')[1].length;
         if (decimalLength > 7) {
             return currentOperand;
         }
     }
 
-    if (number === '.' && currentOperand.includes('.')) {
+    if (number === '.' && Computed === false && currentOperand.includes('.')) {
         return currentOperand;
-    } else if (currentOperand === '0' && number !== '.') {
-        currentOperand = number
-    } else if (currentOperand === '' && number === '.') {
-        currentOperand = `0${number}`
+    } else if (currentOperand === '0' && number !== '.' || Computed === true) {
+        currentOperand = number;
     } else {
         currentOperand += number;
     }
+
+    if (currentOperand[0] === '.') {
+        currentOperand = `0${currentOperand}`
+    }
 }
 
-function chooseOperation(operation) {
-    if (currentOperand === '') {
+function changeSign() {
+
+    if (currentOperand === "Undefined") {
         return currentOperand
     }
 
-    else if (previousOperand !== '') {
+    if (currentOperand === '' || currentOperand === '0' ||
+        currentOperand === 0) {
+        return currentOperand;
+    }
+
+    curr = parseFloat(currentOperand);
+    curr = curr - (curr * 2);
+    currentOperand = curr;
+}
+
+function chooseOperation(operation) {
+
+    if (currentOperand === "Undefined") {
+        return currentOperand
+    }
+
+    if (previousOperand !== '' && currentOperand !== '') {
         compute();
     }
 
-    currentOperation = operation;
-    previousOperand = currentOperand;
-    currentOperand = '';
+    if (currentOperand !== '') {
+        previousOperand = currentOperand;
+        currentOperand = '';
+    }
 
+    currentOperation = operation;
 }
 
+function compute() {
+    let computation = 0;
+    const prev = parseFloat(previousOperand);
+    let curr = parseFloat(currentOperand);
+    if (isNaN(prev)) {
+        return computation;
+    } else {
+
+        if (isNaN(curr)) {
+            curr = prev;
+        }
+
+        switch (currentOperation) {
+            case '+':
+                computation = prev + curr;
+                break;
+            case '-':
+                computation = prev - curr;
+                break;
+            case '/':
+                computation = prev / curr;
+                break;
+            case '*':
+                computation = prev * curr;
+                break;
+            case '^':
+                computation = Math.pow(prev, curr);
+                break;
+            default:
+                return;
+        }
+    }
+
+    currentOperand = parseFloat(computation.toFixed(8));
+    currentOperation = '';
+    previousOperand = '';
+}
+
+
+function computeInline(operation) {
+    let computation = 0;
+    const curr = parseFloat(currentOperand);
+    if (isNaN(curr)) {
+        return computation;
+    } else {
+        switch (operation) {
+            case '%':
+                computation = curr * 0.01;
+                break;
+            case '+/-':
+                computation = curr - 2 * curr;
+                break;
+            case 'x^2':
+                computation = Math.pow(curr, 2);
+                break;
+            case '√x':
+                computation = Math.sqrt(curr);
+                break;
+            case '!':
+                computation = factorial(curr);
+                break;
+            default:
+                return;
+        }
+    }
+
+    if (isNaN(computation)) {
+        currentOperand = 'Undefined'
+    } else {
+        currentOperand = parseFloat(computation.toFixed(8));
+    }
+    Computed = true;
+}
+
+
 function deleteLast() {
+
+    if (currentOperand === 'Undefined') {
+        clearAll();
+    }
 
     if (currentOperand !== '0') {
         currentOperand = currentOperand.slice(0, -1);
@@ -131,35 +289,6 @@ function clearAll() {
     currentOperation = '';
 }
 
-function compute() {
-    let computation = 0;
-    const prev = parseFloat(previousOperand);
-    const curr = parseFloat(currentOperand);
-    if (isNaN(prev) || isNaN(curr)) {
-        return computation;
-    } else {
-        switch (currentOperation) {
-            case '+':
-                computation = prev + curr;
-                break;
-            case '-':
-                computation = prev - curr;
-                break;
-            case '/':
-                computation = prev / curr;
-                break;
-            case '*':
-                computation = prev * curr;
-                break;
-            default:
-                return;
-        }
-    }
-
-    currentOperand = +computation.toFixed(8).toString();
-    currentOperation = '';
-    previousOperand = '';
-}
 
 function updateDisplay() {
     currentOperandTextElement.innerText = currentOperand;
@@ -171,3 +300,17 @@ function updateDisplay() {
 
 }
 
+function factorial(n) {
+    result = 1;
+    if (n < 0) {
+        result = NaN;
+    }
+    if (n === 0) {
+        return result;
+    } else {
+        for (i = 1; i <= n; i++) {
+            result *= i;
+        }
+        return result;
+    }
+}
