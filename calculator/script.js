@@ -23,7 +23,6 @@ updateDisplay();
 numberButtons.forEach(button => {
     button.addEventListener('click', () => {
         appendNumber(button.innerText);
-        Computed = false;
         updateDisplay();
     });
 })
@@ -54,19 +53,16 @@ inlineOperationButtons.forEach(button => {
 
 deleteButton.addEventListener('click', button => {
     deleteLast();
-    Computed = false;
     updateDisplay();
 });
 
 allClearButton.addEventListener('click', button => {
     clearAll();
-    Computed = false;
     updateDisplay();
 });
 
 equalsButton.addEventListener('click', button => {
     compute();
-    Computed = true;
     updateDisplay();
 });
 
@@ -83,7 +79,6 @@ document.addEventListener('keydown', (event) => {
     numberButtons.forEach(button => {
         if (button.innerText === keyName) {
             appendNumber(button.innerText);
-            Computed = false;
             updateDisplay();
         }
     })
@@ -93,27 +88,25 @@ document.addEventListener('keydown', (event) => {
             updateDisplay();
         }
     })
+
     if (keyName === 'Backspace') {
         deleteLast();
-        Computed = false;
         updateDisplay();
     }
 
     if (keyName === 'Enter') {
+        event.preventDefault();
         compute();
-        Computed = true;
         updateDisplay();
     }
 
     if (keyName === '=') {
         compute();
-        Computed = true;
         updateDisplay();
     }
 
     if (keyName === 'Escape') {
         clearAll();
-        Computed = false;
         updateDisplay();
     }
 
@@ -151,8 +144,10 @@ function appendNumber(number) {
         return currentOperand;
     } else if (currentOperand === '0' && number !== '.' || Computed === true) {
         currentOperand = number;
+        Computed = false;
     } else {
         currentOperand += number;
+        Computed = false;
     }
 
     if (currentOperand[0] === '.') {
@@ -184,6 +179,7 @@ function chooseOperation(operation) {
 
     if (previousOperand !== '' && currentOperand !== '') {
         compute();
+        Computed = false;
     }
 
     if (currentOperand !== '') {
@@ -195,6 +191,7 @@ function chooseOperation(operation) {
 }
 
 function compute() {
+
     let computation = 0;
     const prev = parseFloat(previousOperand);
     let curr = parseFloat(currentOperand);
@@ -230,6 +227,7 @@ function compute() {
     currentOperand = parseFloat(computation.toFixed(8));
     currentOperation = '';
     previousOperand = '';
+    Computed = true;
 }
 
 
@@ -272,10 +270,12 @@ function computeInline(operation) {
 function deleteLast() {
 
     if (currentOperand === 'Undefined') {
-        clearAll();
+        return currentOperand;
     }
 
-    if (currentOperand !== '0') {
+    if (Computed) {
+        return currentOperand;
+    } else if (currentOperand !== '0') {
         currentOperand = currentOperand.slice(0, -1);
         if (currentOperand === '') {
             currentOperand = '0';
@@ -287,6 +287,7 @@ function clearAll() {
     previousOperand = '';
     currentOperand = '0';
     currentOperation = '';
+    Computed = false;
 }
 
 
