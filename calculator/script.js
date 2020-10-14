@@ -239,7 +239,11 @@ function computeInline(operation) {
     } else {
         switch (operation) {
             case '%':
-                computation = curr * 0.01;
+                if (currentOperation == '+' || currentOperation == '-') {
+                    computation = curr * 0.01 * previousOperand;
+                } else {
+                    computation = curr * 0.01;
+                }
                 break;
             case '+/-':
                 computation = curr - 2 * curr;
