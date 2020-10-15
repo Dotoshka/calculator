@@ -16,7 +16,7 @@
             <div data-previous-operand class="previous-operand"></div>
             <div data-current-operand class="current-operand"></div>
         </div>
-        
+
         <button data-all-clear title="Clear all (Esc)">AC</button>
         <button data-delete title="Delete the last symbol (Backspace)">DEL</button>
         <button data-sign title="Negate the displayed value (or press Alt-minus)">+/-</button>
@@ -27,7 +27,8 @@
         <button data-number>2</button>
         <button data-number>3</button>
         <button data-operation class="operation" title="Multiply (or press *)">×</button>
-        <button data-operation class="operation" title="Raise the displayed value to the power of the next value entered (or press ^)">x<sup>y</sup></button>
+        <button data-operation class="operation"
+            title="Raise the displayed value to the power of the next value entered (or press ^)">x<sup>y</sup></button>
         <button data-number>4</button>
         <button data-number>5</button>
         <button data-number>6</button>
@@ -39,10 +40,94 @@
         <button data-operation class="operation" title="Subtract (or press -)">-</button>
         <button data-inline-operation title="Calculate the factorial of the displayed value (or press !)">x!</button>
         <button data-number class="span-two">0</button>
-        <button data-number >.</button>
-        <button data-equals title="Equal (or press =)">=</button>
+        <button data-number>.</button>
+        <button data-equals title="Equal (or press Enter/=)">=</button>
     </div>
+    
+    <button id="help-button" title="Help (or press <h>)">Help</button>
 
+    <div id="help" class="help">
+        <div class="help-content">
+            <span id="close" class="close" title="Close (Esc)">×</span>
+            <h4>For your comfort</h4>
+            <ol class="help-list">
+                <li>Keyboard input</li>
+                <li>Button tooltips (on hover)</li>
+            </ol>
+            <h4>Calculator supports the following operators and functions</h4>
+            <table class="calculator-functions">
+                <thead>
+                    <tr>
+                        <th>Function</th>
+                        <th>Syntax</th>
+                        <th>Keyboard</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Addition</td>
+                        <td>&lt;number&gt; + &lt;number&gt;</td>
+                        <td>+</td>
+                    </tr>
+                    <tr>
+                        <td>Subtraction</td>
+                        <td>&lt;number&gt; - &lt;number&gt;</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>Multiplication</td>
+                        <td>&lt;number&gt; × &lt;number&gt;</td>
+                        <td>*</td>
+                    </tr>
+                    <tr>
+                        <td>Division</td>
+                        <td>&lt;number&gt; ÷ &lt;number&gt;</td>
+                        <td>/</td>
+                    </tr>
+                    <tr>
+                        <td>Negation</td>
+                        <td>&lt;number&gt; +/-</td>
+                        <td>Alt-minus</td>
+                    </tr>
+                    <tr>
+                        <td>Percent</td>
+                        <td>&lt;number&gt; %</td>
+                        <td>%</td>
+                    </tr>
+                    <tr>
+                        <td>Square root</td>
+                        <td>&lt;number&gt; √x</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Square</td>
+                        <td>&lt;number&gt; x<sup>2</sup></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Power</td>
+                        <td>&lt;number&gt; x<sup>y</sup></td>
+                        <td>^</td>
+                    </tr>
+                    <tr>
+                        <td>Factorial</td>
+                        <td>&lt;number&gt; x!</td>
+                        <td>!</td>
+                    </tr>
+                    <tr>
+                        <td>Clear all</td>
+                        <td>AC</td>
+                        <td>Esc</td>
+                    </tr>
+                    <tr>
+                        <td>Delete</td>
+                        <td>DEL</td>
+                        <td>Backspace</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
 
 </html>

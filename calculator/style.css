@@ -1,7 +1,8 @@
+/* Common */
+
 * {
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
-
 }
 
 body {
@@ -11,6 +12,8 @@ body {
     rgb(243, 195, 224), rgb(239, 175, 213), rgb(235, 155, 203), rgb(219, 168, 210), rgb(202, 181, 216), 
     rgb(186, 194, 223), rgb(169, 207, 229), rgb(153, 220, 236), rgb(136, 233, 242));
 }
+
+/* Calculator */
 
 .calculator-grid {
     display: grid;
@@ -62,4 +65,99 @@ body {
 
 .operation:focus {
     background-color: rgba(255, 255, 255, .9);
+}
+
+/* Help window */
+
+.help h4,
+.help-list li,
+#help-button
+    {
+        font-family: Georgia, 'Times New Roman', Times, serif 
+    }
+
+.help {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.help-content {
+    background-image: linear-gradient(to top right, rgb(208, 184, 209), rgb(208, 189, 212), rgb(207, 194, 216), rgb(207, 199, 219), rgb(207, 204, 222), rgb(206, 209, 225), rgb(206, 214, 229), rgb(205, 219, 232), rgb(205, 224, 235), rgb(205, 229, 238), rgb(204, 234, 242), rgb(204, 239, 245));
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+}
+
+/* Help Button */
+
+#help-button {
+    font-size: 16px;
+    color: #fff;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border-radius: 6.2rem;
+    padding: 5px 20px;
+    border: 2px solid rgba(255, 255, 255, .9);
+    background-color:   #d99acf;
+    outline: none;   
+}
+
+#help-button:hover {
+    background-color:  rgb(235, 155, 203, .75);
+}
+
+/* Close Button */
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Help Table */
+
+table {
+    overflow:hidden;
+    background:rgba(255, 255, 255, .75);
+    width: 100%;    
+    /**margin:5% auto 0;*/
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: none;
+}
+ 
+th, td {
+    padding: 3px 0; 
+    text-align:center;
+    font-family: Georgia, 'Times New Roman', Times, serif 
+}
+
+td:not(:last-child), th:not(:last-child) { border-right: 2px solid rgb(235, 155, 203, .5); }
+td { border-top: 2px solid rgb(235, 155, 203, .5); }
+tr:nth-child(odd) td { background: rgba(255, 255, 255, .9); }
+ 
+th {
+    padding-top:10px;
+    color: #fff; 
+    text-shadow: 1px 1px 1px #000;
+    background:  rgba(0, 0, 0, .75);;
 }

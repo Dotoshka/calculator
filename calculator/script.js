@@ -18,8 +18,8 @@ let Computed = false;
 
 const operationMapping = {
     'xy': '^',
-    '÷' : '/',
-    '×' : '*',
+    '÷': '/',
+    '×': '*',
     '+': '+',
     '-': '-'
 };
@@ -74,50 +74,61 @@ signButton.addEventListener('click', button => {
 document.addEventListener('keydown', (event) => {
     const keyName = event.key;
 
-    numberButtons.forEach(button => {
-        if (button.innerText === keyName) {
-            appendNumber(button.innerText);
+    if (helpWindow.style.display !== "block") {
+
+        numberButtons.forEach(button => {
+            if (button.innerText === keyName) {
+                appendNumber(button.innerText);
+                updateDisplay();
+            }
+        })
+        operationButtons.forEach(button => {
+            if (operationMapping[button.innerText] === keyName) {
+                chooseOperation(button.innerText);
+                updateDisplay();
+            }
+        })
+
+        if (keyName === 'Backspace') {
+            deleteLast();
             updateDisplay();
         }
-    })
-    operationButtons.forEach(button => {
-        if (operationMapping[button.innerText] === keyName) {
-            chooseOperation(button.innerText);
+
+        if (keyName === 'Enter') {
+            event.preventDefault();
+            compute();
             updateDisplay();
         }
-    })
 
-    if (keyName === 'Backspace') {
-        deleteLast();
-        updateDisplay();
+        if (keyName === '=') {
+            compute();
+            updateDisplay();
+        }
+
+        if (keyName === 'Escape') {
+            clearAll();
+            updateDisplay();
+        }
+
+        if (keyName === '–') {
+            changeSign();
+            updateDisplay();
+        }
+
+        if (keyName === '%' || keyName === '!') {
+            computeInline(keyName);
+            updateDisplay();
+        }
+
+        if (keyName === 'h') {
+            helpWindow.style.display = "block";
+        }
+
+    } else {
+        if (keyName === 'Escape') {
+            helpWindow.style.display = "none";
+        }
     }
-
-    if (keyName === 'Enter') {
-        event.preventDefault();
-        compute();
-        updateDisplay();
-    }
-
-    if (keyName === '=') {
-        compute();
-        updateDisplay();
-    }
-
-    if (keyName === 'Escape') {
-        clearAll();
-        updateDisplay();
-    }
-
-    if (keyName === '–') {
-        changeSign();
-        updateDisplay();
-    }
-
-    if (keyName === '%' || keyName === '!') {
-        computeInline(keyName);
-        updateDisplay();
-    }
-
 });
 
 /* Functions  */
@@ -310,5 +321,19 @@ function factorial(n) {
             result *= i;
         }
         return result;
+    }
+}
+
+/* Help */
+
+let helpWindow = document.getElementById('help');
+let helpButton = document.getElementById('help-button');
+let closeButton = document.getElementById('close');
+
+helpButton.onclick = function () { helpWindow.style.display = "block"; }
+closeButton.onclick = function () { helpWindow.style.display = "none"; }
+window.onclick = function (event) {
+    if (event.target == helpWindow) {
+        helpWindow.style.display = "none";
     }
 }
