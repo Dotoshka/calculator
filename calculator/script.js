@@ -150,7 +150,7 @@ function appendNumber(number) {
 
 function changeSign() {
 
-    if (currentOperand === "Undefined") {
+    if (currentOperand === "Error") {
         return currentOperand
     }
 
@@ -166,7 +166,7 @@ function changeSign() {
 
 function chooseOperation(operation) {
 
-    if (currentOperand === "Undefined") {
+    if (currentOperand === "Error") {
         return currentOperand
     }
 
@@ -256,7 +256,7 @@ function computeInline(operation) {
     }
 
     if (isNaN(computation)) {
-        currentOperand = 'Undefined'
+        currentOperand = 'Error'
     } else {
         currentOperand = parseFloat(computation.toFixed(8));
     }
@@ -266,7 +266,7 @@ function computeInline(operation) {
 
 function deleteLast() {
 
-    if (currentOperand === 'Undefined') {
+    if (currentOperand === 'Error') {
         return currentOperand;
     }
 
