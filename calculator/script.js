@@ -16,6 +16,14 @@ let currentOperand = '0';
 let currentOperation = '';
 let Computed = false;
 
+const operationMapping = {
+    'xy': '^',
+    '÷' : '/',
+    '×' : '*',
+    '+': '+',
+    '-': '-'
+};
+
 updateDisplay();
 
 /* Event listeners button click */
@@ -29,24 +37,14 @@ numberButtons.forEach(button => {
 
 operationButtons.forEach(button => {
     button.addEventListener('click', () => {
-        if (button.innerText === 'x^y') {
-            chooseOperation('^');
-        } else {
-            chooseOperation(button.innerText);
-        }
+        chooseOperation(button.innerText);
         updateDisplay();
     });
 })
 
 inlineOperationButtons.forEach(button => {
     button.addEventListener('click', () => {
-
-        if (button.innerText === 'x!') {
-            computeInline('!');
-        } else {
-            computeInline(button.innerText);
-        }
-
+        computeInline(button.innerText);
         updateDisplay();
     });
 })
@@ -83,7 +81,7 @@ document.addEventListener('keydown', (event) => {
         }
     })
     operationButtons.forEach(button => {
-        if (button.innerText === keyName) {
+        if (operationMapping[button.innerText] === keyName) {
             chooseOperation(button.innerText);
             updateDisplay();
         }
@@ -107,11 +105,6 @@ document.addEventListener('keydown', (event) => {
 
     if (keyName === 'Escape') {
         clearAll();
-        updateDisplay();
-    }
-
-    if (keyName === '^') {
-        chooseOperation(keyName);
         updateDisplay();
     }
 
@@ -210,13 +203,13 @@ function compute() {
             case '-':
                 computation = prev - curr;
                 break;
-            case '/':
+            case '÷':
                 computation = prev / curr;
                 break;
-            case '*':
+            case '×':
                 computation = prev * curr;
                 break;
-            case '^':
+            case 'xy':
                 computation = Math.pow(prev, curr);
                 break;
             default:
@@ -248,13 +241,13 @@ function computeInline(operation) {
             case '+/-':
                 computation = curr - 2 * curr;
                 break;
-            case 'x^2':
+            case 'x2':
                 computation = Math.pow(curr, 2);
                 break;
             case '√x':
                 computation = Math.sqrt(curr);
                 break;
-            case '!':
+            case 'x!':
                 computation = factorial(curr);
                 break;
             default:
@@ -298,7 +291,7 @@ function clearAll() {
 function updateDisplay() {
     currentOperandTextElement.innerText = currentOperand;
     if (currentOperation != '') {
-        previousOperandTextElement.innerText = `${previousOperand} ${currentOperation}`;
+        previousOperandTextElement.innerText = `${previousOperand} ${operationMapping[currentOperation]}`;
     } else {
         previousOperandTextElement.innerText = previousOperand;
     }
